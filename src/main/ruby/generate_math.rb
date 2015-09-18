@@ -49,6 +49,9 @@ TYPES.each do |type|
     puts "  }"
     puts
   end
+  puts "  public static boolean guard_#{type}_#{type}(Object a, Object b) {"
+  puts "    return (a instanceof #{type}) && (b instanceof #{type});"
+  puts "  }"
 end
 
 combinations = TYPES.combination(2).to_a
@@ -67,5 +70,7 @@ combinations.each do |pair|
     puts "  }"
     puts
   end
+  puts "  public static boolean guard_#{left}_#{right}(Object a, Object b) {"
+  puts "    return (a instanceof #{left}) && (b instanceof #{right});"
+  puts "  }"
 end
-

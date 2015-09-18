@@ -78,14 +78,11 @@ public class OperatorSupport {
   }
 
   public static boolean guard_1(Class<?> expected, Object arg) {
-    Class<?> t = (arg == null) ? Object.class : arg.getClass();
-    return (t == expected);
+    return expected.isInstance(arg);
   }
 
   public static boolean guard_2(Class<?> expected1, Class<?> expected2, Object arg1, Object arg2) {
-    Class<?> t1 = (arg1 == null) ? Object.class : arg1.getClass();
-    Class<?> t2 = (arg2 == null) ? Object.class : arg2.getClass();
-    return (t1 == expected1) && (t2 == expected2);
+    return expected1.isInstance(arg1) && expected2.isInstance(arg2);
   }
 
   public static Object fallback_1(MonomorphicInlineCache inlineCache, Object[] args) throws Throwable {
@@ -132,7 +129,13 @@ public class OperatorSupport {
     }
     target = target.asType(methodType(Object.class, Object.class, Object.class));
 
-    MethodHandle guard = insertArguments(GUARD_2, 0, arg1Class, arg2Class);
+    String guardName = "guard_" + arg1Class.getName().substring(10) + "_" + arg2Class.getName().substring(10);
+    MethodHandle guard;
+    try {
+      guard = inlineCache.callerLookup.findStatic(OperatorSupport.class, guardName, methodType(boolean.class, Object.class, Object.class));
+    } catch (NoSuchMethodException e) {
+      guard = insertArguments(GUARD_2, 0, arg1Class, arg2Class);
+    }
 
     MethodHandle guardedTarget = guardWithTest(guard, target, inlineCache.fallback);
     inlineCache.setTarget(guardedTarget);
@@ -166,6 +169,7 @@ public class OperatorSupport {
   // primitive specific arithmetic and comparisons (generated, use generate_math.rb) ......................................................................
 
   // BEGIN GENERATED
+
   public static Object plus(Character a, Character b) {
     return ((char) a) + ((char) b);
   }
@@ -210,6 +214,9 @@ public class OperatorSupport {
     return ((char) a) >= ((char) b);
   }
 
+  public static boolean guard_Character_Character(Object a, Object b) {
+    return (a instanceof Character) && (b instanceof Character);
+  }
   public static Object plus(Integer a, Integer b) {
     return ((int) a) + ((int) b);
   }
@@ -254,6 +261,9 @@ public class OperatorSupport {
     return ((int) a) >= ((int) b);
   }
 
+  public static boolean guard_Integer_Integer(Object a, Object b) {
+    return (a instanceof Integer) && (b instanceof Integer);
+  }
   public static Object plus(Long a, Long b) {
     return ((long) a) + ((long) b);
   }
@@ -298,6 +308,9 @@ public class OperatorSupport {
     return ((long) a) >= ((long) b);
   }
 
+  public static boolean guard_Long_Long(Object a, Object b) {
+    return (a instanceof Long) && (b instanceof Long);
+  }
   public static Object plus(Double a, Double b) {
     return ((double) a) + ((double) b);
   }
@@ -342,6 +355,9 @@ public class OperatorSupport {
     return ((double) a) >= ((double) b);
   }
 
+  public static boolean guard_Double_Double(Object a, Object b) {
+    return (a instanceof Double) && (b instanceof Double);
+  }
   public static Object plus(Float a, Float b) {
     return ((float) a) + ((float) b);
   }
@@ -386,6 +402,9 @@ public class OperatorSupport {
     return ((float) a) >= ((float) b);
   }
 
+  public static boolean guard_Float_Float(Object a, Object b) {
+    return (a instanceof Float) && (b instanceof Float);
+  }
   public static Object plus(Character a, Integer b) {
     return ((int) a) + ((int) b);
   }
@@ -430,6 +449,9 @@ public class OperatorSupport {
     return ((int) a) >= ((int) b);
   }
 
+  public static boolean guard_Character_Integer(Object a, Object b) {
+    return (a instanceof Character) && (b instanceof Integer);
+  }
   public static Object plus(Character a, Long b) {
     return ((long) a) + ((long) b);
   }
@@ -474,6 +496,9 @@ public class OperatorSupport {
     return ((long) a) >= ((long) b);
   }
 
+  public static boolean guard_Character_Long(Object a, Object b) {
+    return (a instanceof Character) && (b instanceof Long);
+  }
   public static Object plus(Character a, Double b) {
     return ((double) a) + ((double) b);
   }
@@ -518,6 +543,9 @@ public class OperatorSupport {
     return ((double) a) >= ((double) b);
   }
 
+  public static boolean guard_Character_Double(Object a, Object b) {
+    return (a instanceof Character) && (b instanceof Double);
+  }
   public static Object plus(Character a, Float b) {
     return ((float) a) + ((float) b);
   }
@@ -562,6 +590,9 @@ public class OperatorSupport {
     return ((float) a) >= ((float) b);
   }
 
+  public static boolean guard_Character_Float(Object a, Object b) {
+    return (a instanceof Character) && (b instanceof Float);
+  }
   public static Object plus(Integer a, Long b) {
     return ((long) a) + ((long) b);
   }
@@ -606,6 +637,9 @@ public class OperatorSupport {
     return ((long) a) >= ((long) b);
   }
 
+  public static boolean guard_Integer_Long(Object a, Object b) {
+    return (a instanceof Integer) && (b instanceof Long);
+  }
   public static Object plus(Integer a, Double b) {
     return ((double) a) + ((double) b);
   }
@@ -650,6 +684,9 @@ public class OperatorSupport {
     return ((double) a) >= ((double) b);
   }
 
+  public static boolean guard_Integer_Double(Object a, Object b) {
+    return (a instanceof Integer) && (b instanceof Double);
+  }
   public static Object plus(Integer a, Float b) {
     return ((float) a) + ((float) b);
   }
@@ -694,6 +731,9 @@ public class OperatorSupport {
     return ((float) a) >= ((float) b);
   }
 
+  public static boolean guard_Integer_Float(Object a, Object b) {
+    return (a instanceof Integer) && (b instanceof Float);
+  }
   public static Object plus(Long a, Double b) {
     return ((double) a) + ((double) b);
   }
@@ -738,6 +778,9 @@ public class OperatorSupport {
     return ((double) a) >= ((double) b);
   }
 
+  public static boolean guard_Long_Double(Object a, Object b) {
+    return (a instanceof Long) && (b instanceof Double);
+  }
   public static Object plus(Long a, Float b) {
     return ((float) a) + ((float) b);
   }
@@ -782,6 +825,9 @@ public class OperatorSupport {
     return ((float) a) >= ((float) b);
   }
 
+  public static boolean guard_Long_Float(Object a, Object b) {
+    return (a instanceof Long) && (b instanceof Float);
+  }
   public static Object plus(Double a, Float b) {
     return ((double) a) + ((double) b);
   }
@@ -826,6 +872,9 @@ public class OperatorSupport {
     return ((double) a) >= ((double) b);
   }
 
+  public static boolean guard_Double_Float(Object a, Object b) {
+    return (a instanceof Double) && (b instanceof Float);
+  }
   public static Object plus(Integer a, Character b) {
     return ((int) a) + ((int) b);
   }
@@ -870,6 +919,9 @@ public class OperatorSupport {
     return ((int) a) >= ((int) b);
   }
 
+  public static boolean guard_Integer_Character(Object a, Object b) {
+    return (a instanceof Integer) && (b instanceof Character);
+  }
   public static Object plus(Long a, Character b) {
     return ((long) a) + ((long) b);
   }
@@ -914,6 +966,9 @@ public class OperatorSupport {
     return ((long) a) >= ((long) b);
   }
 
+  public static boolean guard_Long_Character(Object a, Object b) {
+    return (a instanceof Long) && (b instanceof Character);
+  }
   public static Object plus(Double a, Character b) {
     return ((double) a) + ((double) b);
   }
@@ -958,6 +1013,9 @@ public class OperatorSupport {
     return ((double) a) >= ((double) b);
   }
 
+  public static boolean guard_Double_Character(Object a, Object b) {
+    return (a instanceof Double) && (b instanceof Character);
+  }
   public static Object plus(Float a, Character b) {
     return ((float) a) + ((float) b);
   }
@@ -1002,6 +1060,9 @@ public class OperatorSupport {
     return ((float) a) >= ((float) b);
   }
 
+  public static boolean guard_Float_Character(Object a, Object b) {
+    return (a instanceof Float) && (b instanceof Character);
+  }
   public static Object plus(Long a, Integer b) {
     return ((long) a) + ((long) b);
   }
@@ -1046,6 +1107,9 @@ public class OperatorSupport {
     return ((long) a) >= ((long) b);
   }
 
+  public static boolean guard_Long_Integer(Object a, Object b) {
+    return (a instanceof Long) && (b instanceof Integer);
+  }
   public static Object plus(Double a, Integer b) {
     return ((double) a) + ((double) b);
   }
@@ -1090,6 +1154,9 @@ public class OperatorSupport {
     return ((double) a) >= ((double) b);
   }
 
+  public static boolean guard_Double_Integer(Object a, Object b) {
+    return (a instanceof Double) && (b instanceof Integer);
+  }
   public static Object plus(Float a, Integer b) {
     return ((float) a) + ((float) b);
   }
@@ -1134,6 +1201,9 @@ public class OperatorSupport {
     return ((float) a) >= ((float) b);
   }
 
+  public static boolean guard_Float_Integer(Object a, Object b) {
+    return (a instanceof Float) && (b instanceof Integer);
+  }
   public static Object plus(Double a, Long b) {
     return ((double) a) + ((double) b);
   }
@@ -1178,6 +1248,9 @@ public class OperatorSupport {
     return ((double) a) >= ((double) b);
   }
 
+  public static boolean guard_Double_Long(Object a, Object b) {
+    return (a instanceof Double) && (b instanceof Long);
+  }
   public static Object plus(Float a, Long b) {
     return ((float) a) + ((float) b);
   }
@@ -1222,6 +1295,9 @@ public class OperatorSupport {
     return ((float) a) >= ((float) b);
   }
 
+  public static boolean guard_Float_Long(Object a, Object b) {
+    return (a instanceof Float) && (b instanceof Long);
+  }
   public static Object plus(Float a, Double b) {
     return ((double) a) + ((double) b);
   }
@@ -1264,6 +1340,10 @@ public class OperatorSupport {
 
   public static Object moreorequals(Float a, Double b) {
     return ((double) a) >= ((double) b);
+  }
+
+  public static boolean guard_Float_Double(Object a, Object b) {
+    return (a instanceof Float) && (b instanceof Double);
   }
 
 
