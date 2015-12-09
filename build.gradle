@@ -19,6 +19,7 @@ plugins {
   id 'maven-publish'
   id 'findbugs'
   id 'com.github.ben-manes.versions' version '0.11.3'
+  id 'com.gradle.build-receipt' version '1.0'
 }
 
 // .................................................................................................................. //
@@ -329,6 +330,13 @@ task deployMavenPluginToBintray(type: Exec, dependsOn: buildMavenPlugin) {
 task wrapper(type: Wrapper) {
   gradleVersion = '2.9'
   description 'Generates the Gradle wrapper scripts.'
+}
+
+// .................................................................................................................. //
+
+buildReceiptLicense {
+    agreementUrl = 'https://gradle.com/terms-of-service'
+    agree = 'yes'
 }
 
 // .................................................................................................................. //
