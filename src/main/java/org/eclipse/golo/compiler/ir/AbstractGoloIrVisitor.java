@@ -35,6 +35,11 @@ public abstract class AbstractGoloIrVisitor implements GoloIrVisitor {
   }
 
   @Override
+  public void visitGoloException(GoloException exception) {
+    exception.walk(this);
+  }
+
+  @Override
   public void visitUnion(Union union) {
     union.walk(this);
   }

@@ -17,6 +17,8 @@ public interface GoloIrVisitor {
 
   void visitStruct(Struct struct);
 
+  void visitGoloException(GoloException exception);
+
   void visitUnion(Union union);
 
   void visitUnionValue(UnionValue value);

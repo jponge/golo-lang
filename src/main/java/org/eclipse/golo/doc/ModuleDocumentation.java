@@ -156,6 +156,12 @@ class ModuleDocumentation implements DocumentationElement {
     }
 
     @Override
+    public Object visit(ASTExceptionDeclaration node, Object data) {
+      // TODO
+      return null;
+    }
+
+    @Override
     public Object visit(ASTUnionDeclaration node, Object data) {
       this.currentUnion = new UnionDocumentation()
           .name(node.getName())

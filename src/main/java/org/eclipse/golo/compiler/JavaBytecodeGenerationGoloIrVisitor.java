@@ -55,8 +55,10 @@ class JavaBytecodeGenerationGoloIrVisitor implements GoloIrVisitor {
   private String sourceFilename;
   private Context context;
   private GoloModule currentModule;
+
   private static final JavaBytecodeStructGenerator STRUCT_GENERATOR = new JavaBytecodeStructGenerator();
   private static final JavaBytecodeUnionGenerator UNION_GENERATOR = new JavaBytecodeUnionGenerator();
+  private static final JavaBytecodeExceptionGenerator EXCEPTION_GENERATOR = new JavaBytecodeExceptionGenerator();
 
   private static final class Context {
     private final Deque<ReferenceTable> referenceTableStack = new LinkedList<>();
@@ -247,6 +249,11 @@ class JavaBytecodeGenerationGoloIrVisitor implements GoloIrVisitor {
 
   public void visitStruct(Struct struct) {
     this.generationResults.add(STRUCT_GENERATOR.compile(struct, this.sourceFilename));
+  }
+
+  @Override
+  public void visitGoloException(GoloException exception) {
+    this.generationResults.add(EXCEPTION_GENERATOR.compile(exception, this.sourceFilename));
   }
 
   public void visitUnion(Union union) {

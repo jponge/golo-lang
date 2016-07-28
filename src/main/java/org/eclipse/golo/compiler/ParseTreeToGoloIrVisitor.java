@@ -230,6 +230,17 @@ public class ParseTreeToGoloIrVisitor implements GoloParserVisitor {
   }
 
   @Override
+  public Object visit(ASTExceptionDeclaration node, Object data) {
+    Context context = (Context) data;
+    if (!context.checkExistingSubtype(node, node.getName())) {
+      context.module.addException(exception(node.getName())
+        .ofAST(node)
+        .members(node.getMembers()));
+    }
+    return node.childrenAccept(this, data);
+  }
+
+  @Override
   public Object visit(ASTUnionDeclaration node, Object data) {
     Context context = (Context) data;
     if (!context.checkExistingSubtype(node, node.getName())) {

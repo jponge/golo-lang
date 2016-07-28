@@ -84,6 +84,19 @@ public class IrTreeDumper implements GoloIrVisitor {
   }
 
   @Override
+  public void visitGoloException(GoloException exception) {
+    incr();
+    space();
+    System.out.println("Exception " + exception.getPackageAndClass().className());
+    space();
+    System.out.println(" - target class = " + exception.getPackageAndClass());
+    space();
+    System.out.println(" - members = " + exception.getMembers());
+    exception.walk(this);
+    decr();
+  }
+
+  @Override
   public void visitUnion(Union union) {
     incr();
     space();

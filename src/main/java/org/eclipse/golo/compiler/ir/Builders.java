@@ -222,6 +222,10 @@ public final class Builders {
     return new Union(name);
   }
 
+  public static GoloException exception(String name) {
+    return new GoloException(name);
+  }
+
   public static CollectionLiteral collection(String type, Object... values) {
     return collection(CollectionLiteral.Type.valueOf(type), values);
   }

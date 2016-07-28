@@ -334,7 +334,7 @@ class JavaBytecodeStructGenerator {
   }
 
   private void makeNoArgsConstructor(ClassWriter classWriter, Struct struct) {
-    String owner = struct.getPackageAndClass().toJVMType();
+      String owner = struct.getPackageAndClass().toJVMType();
     MethodVisitor visitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
     visitor.visitCode();
     visitor.visitVarInsn(ALOAD, 0);

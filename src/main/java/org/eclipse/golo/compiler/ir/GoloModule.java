@@ -27,6 +27,7 @@ public final class GoloModule extends GoloElement implements FunctionContainer {
   private final Set<NamedAugmentation> namedAugmentations = new LinkedHashSet<>();
   private final Set<Struct> structs = new LinkedHashSet<>();
   private final Set<Union> unions = new LinkedHashSet<>();
+  private final Set<GoloException> exceptions = new LinkedHashSet<>();
   private final Set<LocalReference> moduleState = new LinkedHashSet<>();
   private GoloFunction moduleStateInitializer = null;
   private boolean hasMain = false;
@@ -135,6 +136,12 @@ public final class GoloModule extends GoloElement implements FunctionContainer {
     struct.setModuleName(getPackageAndClass());
   }
 
+  public void addException(GoloException exception) {
+    exceptions.add(exception);
+    makeParentOf(exception);
+    exception.setModuleName(getPackageAndClass());
+  }
+
   public GoloElement getSubtypeByName(String name) {
     for (Struct s : structs) {
       if (s.getName().equals(name)) {
@@ -194,8 +201,8 @@ public final class GoloModule extends GoloElement implements FunctionContainer {
     for (NamedAugmentation augmentation : namedAugmentations) {
       augmentation.accept(visitor);
     }
-    for (LocalReference moduleState : moduleState) {
-      moduleState.accept(visitor);
+    for (LocalReference localReference : moduleState) {
+      localReference.accept(visitor);
     }
     for (GoloFunction function : new LinkedList<GoloFunction>(functions)) {
       function.accept(visitor);
