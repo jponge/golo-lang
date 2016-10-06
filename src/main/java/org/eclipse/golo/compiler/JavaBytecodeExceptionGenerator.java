@@ -37,17 +37,17 @@ class JavaBytecodeExceptionGenerator {
   }
 
   private void makeFields(ClassWriter classWriter, GoloException exception) {
-    for (String name : exception.getMembers()) {
-      FieldVisitor fieldVisitor = classWriter.visitField(ACC_PRIVATE, name, "Ljava/lang/Object;", null, null);
+    for (String member : exception.getMembers()) {
+      FieldVisitor fieldVisitor = classWriter.visitField(ACC_PRIVATE, member, "Ljava/lang/Object;", null, null);
       fieldVisitor.visitEnd();
     }
   }
 
   private void makeConstructors(ClassWriter classWriter, GoloException exception) {
-    makeNoArgsConstructor(classWriter, exception);
+    makeAllArgsConstructor(classWriter, exception);
   }
 
-  private void makeNoArgsConstructor(ClassWriter classWriter, GoloException exception) {
+  private void makeAllArgsConstructor(ClassWriter classWriter, GoloException exception) {
     String owner = exception.getPackageAndClass().toJVMType();
     String signature = "(" +
       IntStream.range(0, exception.getMembers().size())
@@ -56,8 +56,14 @@ class JavaBytecodeExceptionGenerator {
       + ")V";
     MethodVisitor mv = classWriter.visitMethod(ACC_PUBLIC, "<init>", signature, null, null);
     mv.visitCode();
+    mv.visitVarInsn(ALOAD, 0);
     mv.visitMethodInsn(INVOKESPECIAL, PARENT_EXCEPTION, "<init>", "()V", false);
-
+    int varIndex = 1;
+    for (String member : exception.getMembers()) {
+      mv.visitVarInsn(ALOAD, varIndex);
+      mv.visitFieldInsn(PUTFIELD, owner, member, "Ljava/lang/Object;");
+      varIndex += 1;
+    }
     mv.visitMaxs(0, 0);
     mv.visitEnd();
   }

@@ -195,6 +195,9 @@ public final class GoloModule extends GoloElement implements FunctionContainer {
     for (Struct struct : structs) {
       struct.accept(visitor);
     }
+    for (GoloException exception : exceptions) {
+      exception.accept(visitor);
+    }
     for (Augmentation augment :augmentations.values()) {
       augment.accept(visitor);
     }
