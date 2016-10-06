@@ -31,7 +31,7 @@ class JavaBytecodeExceptionGenerator {
     classWriter.visit(V1_8, ACC_PUBLIC | ACC_SUPER | ACC_FINAL,
       exception.getPackageAndClass().toJVMType(), null, PARENT_EXCEPTION, null);
     makeFields(classWriter, exception);
-    makeConstructors(classWriter, exception);
+    makeConstructor(classWriter, exception);
     classWriter.visitEnd();
     return new CodeGenerationResult(classWriter.toByteArray(), exception.getPackageAndClass());
   }
@@ -43,11 +43,7 @@ class JavaBytecodeExceptionGenerator {
     }
   }
 
-  private void makeConstructors(ClassWriter classWriter, GoloException exception) {
-    makeAllArgsConstructor(classWriter, exception);
-  }
-
-  private void makeAllArgsConstructor(ClassWriter classWriter, GoloException exception) {
+  private void makeConstructor(ClassWriter classWriter, GoloException exception) {
     String owner = exception.getPackageAndClass().toJVMType();
     String signature = "(" +
       IntStream.range(0, exception.getMembers().size())
