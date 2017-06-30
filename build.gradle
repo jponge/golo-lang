@@ -293,14 +293,16 @@ distributions {
 
 // .................................................................................................................. //
 
-ext.mavenRepos = [
-  [
-    name: 'project',
+ext.mavenRepos = []
+
+if (project.hasProperty("buildProofcheckMavenRepo")) {
+  mavenRepos.add([
+    name: 'proofcheck-maven-repo',
     url: "$buildDir/maven-repo",
     user: '',
     password: ''
-  ]
-]
+  ])
+}
 
 if (project.hasProperty('eclipseRepoUsername')) {
   mavenRepos.add([
