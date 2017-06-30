@@ -151,20 +151,6 @@ processResources {
 
 // .................................................................................................................. //
 
-findbugs {
-  sourceSets = [sourceSets.main]
-  effort = 'max'
-  ignoreFailures = true
-  excludeFilter = file("$rootProject.projectDir/gradle/findbugs-exclusions.xml")
-}
-
-tasks.withType(FindBugs) {
-  reports {
-    xml.enabled = false
-    html.enabled = true
-  }
-}
-
 jacocoTestReport.dependsOn test
 
 // .................................................................................................................. //
